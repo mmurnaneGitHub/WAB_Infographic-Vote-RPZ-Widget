@@ -23,6 +23,8 @@ define([
     'dojo/Deferred',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/popup',
+           'dojox/mobile/Button',  //MJM - mobile button	
+           'jimu/PanelManager', //MJM - use to close another panel
     'dijit/TooltipDialog',
     'jimu/BaseWidget',
     'jimu/dijit/GridLayout',
@@ -37,6 +39,7 @@ define([
     './utils'
   ],
   function(declare, lang, array, html, on, Deferred, _WidgetsInTemplateMixin, dojoPopup,
+    mobileButton, PanelManager,	
     TooltipDialog, BaseWidget, GridLayout, LayerInfos, jimuUtils, DijitFactory,
     DataSourceManager, SourceLauncher, ExtraSourceLauncher, ChartSetting, IGUtils, utils) {
 
@@ -84,13 +87,28 @@ define([
         if (this.mainDijitVisible && this._avalidDataSource) {
           this._processdsdef = this._preprocessingDataSource();
         }
+       //MJM--------------------------------------------------------------------------	
+        new mobileButton({ //Create a button to search by Category	
+          label: "Back to RPZ Details  &nbsp;&nbsp;&nbsp;&nbsp;<img src='images/rightArrow18_2.png'>", 	
+          onClick: lang.hitch(this, this._back2Info)	
+        }, "buttonBack").startup();	
+        //-----------------------------------------------------------------------------	
       },
 
+       _back2Info: function () {  //MJM - Back to description panel.	
+          PanelManager.getInstance().showPanel(this.appConfig.widgetPool.widgets[3]);  //Loads and opens About panel: works, but stays open!!! Fix with onClose event.	
+          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[2].id + '_panel');  //close this panel - Infographic Widget
+      },	
+        
       _listenDSManagerUpdateEvent: function() {
         this.exdsBeginUpdateHandle = on(this.dataSourceManager, 'begin-update',
           lang.hitch(this, function(dsid) {
             this._handleLoadingStatusForExds(dsid, true);
           }));
+         //MJM - Added to get around Vote & About panels staying open.	
+          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget	
+          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[3].id + '_panel');  //Close About Widget
+          //End MJM
       },
 
       _checkDataSource: function(config) {
