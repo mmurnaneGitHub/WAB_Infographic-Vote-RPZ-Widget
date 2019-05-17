@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2018 Esri. All Rights Reserved.
+// Copyright © Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,9 +23,8 @@ define([
     'dojo/Deferred',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/popup',
-            //'dijit/form/Button',  //MJM
-            'dojox/mobile/Button',  //MJM - mobile button
-            'jimu/PanelManager', //MJM - use to close another panel
+           'dojox/mobile/Button',  //MJM - mobile button	
+           'jimu/PanelManager', //MJM - use to close another panel
     'dijit/TooltipDialog',
     'jimu/BaseWidget',
     'jimu/dijit/GridLayout',
@@ -40,7 +39,7 @@ define([
     './utils'
   ],
   function(declare, lang, array, html, on, Deferred, _WidgetsInTemplateMixin, dojoPopup,
-    mobileButton, PanelManager,
+    mobileButton, PanelManager,	
     TooltipDialog, BaseWidget, GridLayout, LayerInfos, jimuUtils, DijitFactory,
     DataSourceManager, SourceLauncher, ExtraSourceLauncher, ChartSetting, IGUtils, utils) {
 
@@ -71,7 +70,6 @@ define([
         this._initDijitFactory();
         //hide runtime setting popup when click widget
         this._initSettingIconEvent();
-
       },
 
       startup: function() {
@@ -89,20 +87,19 @@ define([
         if (this.mainDijitVisible && this._avalidDataSource) {
           this._processdsdef = this._preprocessingDataSource();
         }
-
-        //MJM--------------------------------------------------------------------------
-        new mobileButton({ //Create a button to search by Category
-          label: "Back to RPZ Details  &nbsp;&nbsp;&nbsp;&nbsp;<img src='images/rightArrow18_2.png'>", 
-          onClick: lang.hitch(this, this._back2Info)
-        }, "buttonBack").startup();
-        //-----------------------------------------------------------------------------
+       //MJM--------------------------------------------------------------------------	
+        new mobileButton({ //Create a button to search by Category	
+          label: "Back to RPZ Details  &nbsp;&nbsp;&nbsp;&nbsp;<img src='images/rightArrow18_2.png'>", 	
+          onClick: lang.hitch(this, this._back2Info)	
+        }, "buttonBack").startup();	
+        //-----------------------------------------------------------------------------	
       },
 
-      _back2Info: function () {  //MJM - Back to description panel.
-          PanelManager.getInstance().showPanel(this.appConfig.widgetPool.widgets[3]);  //Loads and opens About panel: works, but stays open!!! Fix with onClose event.
+      _back2Info: function () {  //MJM - Back to description panel.	
+          PanelManager.getInstance().showPanel(this.appConfig.widgetPool.widgets[3]);  //Loads and opens About panel: works, but stays open!!! Fix with onClose event.	
           PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[2].id + '_panel');  //close this panel - Infographic Widget
-      },
-
+      },	
+        
       _listenDSManagerUpdateEvent: function() {
         this.exdsBeginUpdateHandle = on(this.dataSourceManager, 'begin-update',
           lang.hitch(this, function(dsid) {
@@ -127,11 +124,10 @@ define([
         } else { //not first open
           this._onOpenTriger();
         }
-
-          //MJM - Added to get around Vote & About panels staying open.
-          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget
+         //MJM - Added to get around Vote & About panels staying open.	
+          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget	
           PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[3].id + '_panel');  //Close About Widget
-
+          //End MJM
       },
 
       _onOpenTriger: function() {
@@ -255,7 +251,7 @@ define([
 
       //Called when extral ds/widget output ds is changed
       onDataSourceDataUpdate: function(dsId, data) {
-       this._handleLoadingStatusForExds(dsId, false);
+        this._handleLoadingStatusForExds(dsId, false);
         var ds = this.config.dataSource;
         var ds1 = this.rangeDataSource1;
         var ds2 = this.rangeDataSource2;
@@ -691,7 +687,7 @@ define([
         //rds means range data source, rst means range statistic
         var mainStatistic = null;
         if (dijitJson.type === 'chart') {
-          mainStatistic = utils.getStatisticForChart(dijitJson.config);
+          mainStatistic = utils.getStatisticForChart(dijitJson.config.data);
         } else {
           var statistic = utils.getStatisticForGauge(dijitJson.config);
           mainStatistic = statistic.value;
@@ -793,27 +789,13 @@ define([
 
       _onMainSourceLauncherStart: function() {
         if (this.mainDijit && typeof this.mainDijit.onUpdateDataStart === 'function') {
-          //console.error(this.mainDijit);  //mjm - just intial 
           this.mainDijit.onUpdateDataStart();
         }
       },
 
       _onMainSourceLauncherDone: function() {
-                        //START HERE - runs on open & all changes - BUT LOOK @ onUpdateDataStart
-                        //console.error(this.mainDijit );  //mjm  - JUST THE INITIAL NUMBERS, BUT GETS UPDATE FOR PANEL ELSEWHERE???
-                        //console.error(this.mainDijit.features );  //mjm
-                        //console.error(this.mainDijit.features[0].attributes );  //mjm
-                        //this.mainDijit.features[0].attributes.STAT_COUNT = "2 (xx%)";  //MJM TEST! - was 2 - changes value, but not mouseover
-                        //this.mainDijit.features[0].attributes.STAT_COUNT = 3;  //MJM TEST! - was 2 - changes value, but not mouseover
-                        //console.error(this.mainDijit.features[0].attributes.STAT_COUNT );  //mjm
-
         if (this.mainDijit && typeof this.mainDijit.onUpdateDataDone === 'function') {
           this.mainDijit.onUpdateDataDone();
-          
-          //console.error(this.mainDijit);  //mjm
-          //console.error(this.mainDijit.features);  //MJM - STAYS 3 REGARDLESS OF MAP EXTENT - PROBABLY STARTUP VALUES - WILL BE UNDEFINED IF START OUTSIDE MAP EXTENT, THEN CHANGE TO 3
-          //this.mainDijit.features[0].attributes.STAT_COUNT = "x (xx%)";  //MJM TEST! - changes value, but not mouseover
-          //Values are changing here - just have to be aware of starting woithin undefined (no parcells in map extent)
         }
       },
 
