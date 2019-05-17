@@ -95,7 +95,7 @@ define([
         //-----------------------------------------------------------------------------	
       },
 
-       _back2Info: function () {  //MJM - Back to description panel.	
+      _back2Info: function () {  //MJM - Back to description panel.	
           PanelManager.getInstance().showPanel(this.appConfig.widgetPool.widgets[3]);  //Loads and opens About panel: works, but stays open!!! Fix with onClose event.	
           PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[2].id + '_panel');  //close this panel - Infographic Widget
       },	
@@ -105,10 +105,6 @@ define([
           lang.hitch(this, function(dsid) {
             this._handleLoadingStatusForExds(dsid, true);
           }));
-         //MJM - Added to get around Vote & About panels staying open.	
-          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget	
-          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[3].id + '_panel');  //Close About Widget
-          //End MJM
       },
 
       _checkDataSource: function(config) {
@@ -128,6 +124,10 @@ define([
         } else { //not first open
           this._onOpenTriger();
         }
+         //MJM - Added to get around Vote & About panels staying open.	
+          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget	
+          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[3].id + '_panel');  //Close About Widget
+          //End MJM
       },
 
       _onOpenTriger: function() {
