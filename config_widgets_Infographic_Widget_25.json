@@ -21,11 +21,11 @@
                 "isClosable": true,
                 "componentName": "jimu grid",
                 "componentState": {
-                  "id": "47316118021055675-1"
+                  "id": "8047528744544558-1"
                 },
                 "reorderEnabled": true,
                 "title": "jimu grid",
-                "id": "47316118021055675-1"
+                "id": "8047528744544558-1"
               }
             ]
           },
@@ -42,11 +42,11 @@
                 "isClosable": true,
                 "componentName": "jimu grid",
                 "componentState": {
-                  "id": "47316118021055675-2"
+                  "id": "8047528744544558-2"
                 },
                 "reorderEnabled": true,
                 "title": "jimu grid",
-                "id": "47316118021055675-2"
+                "id": "8047528744544558-2"
               }
             ]
           },
@@ -64,11 +64,11 @@
                 "isClosable": true,
                 "componentName": "jimu grid",
                 "componentState": {
-                  "id": "47316118021055675-3"
+                  "id": "8047528744544558-3"
                 },
                 "reorderEnabled": true,
                 "title": "jimu grid",
-                "id": "47316118021055675-3"
+                "id": "8047528744544558-3"
               }
             ]
           }
@@ -78,7 +78,7 @@
   },
   "dijits": [
     {
-      "id": "47316118021055675-1",
+      "id": "8047528744544558-1",
       "type": "text",
       "visible": true,
       "config": {
@@ -100,11 +100,11 @@
           "fontSize": 16,
           "textColor": "#282828"
         },
-        "text": "CURRENT VOTE TOTALS"
+        "text": "TITLE OF THE INFOGRAPHIC"
       }
     },
     {
-      "id": "47316118021055675-2",
+      "id": "8047528744544558-2",
       "type": "chart",
       "visible": true,
       "config": {
@@ -112,19 +112,18 @@
           "mode": "count",
           "type": "pie",
           "clusterField": "Vote",
-          "dateConfig": null,
           "sortOrder": {
             "isAsc": true,
-            "isLabelAxis": true
+            "isLabelAxis": false
           },
           "maxLabels": 100
         },
         "display": {
-          "backgroundColor": "#fff",
+          "backgroundColor": "#ffffff",
           "seriesStyle": {
+            "type": "series",
             "styles": [
               {
-                "name": "pie~not-field",
                 "style": {
                   "color": [
                     "#68D2E0",
@@ -135,72 +134,31 @@
                     "#C8501D"
                   ]
                 },
+                "name": "pie~not-field",
                 "label": "pie~not-field"
               }
-            ],
-            "type": "layerSymbol",
-            "customColor": {
-              "categories": [
-                {
-                  "uniqueID": "7137036425513701",
-                  "text": "No",
-                  "label": "No",
-                  "color": "#c8501d",
-                  "id": "No"
-                },
-                {
-                  "uniqueID": "31515145124838156",
-                  "text": "Not Voted",
-                  "label": "Not Voted",
-                  "color": "#2db7c6",
-                  "id": "Not Voted"
-                },
-                {
-                  "uniqueID": "2979690678741456",
-                  "text": "Yes",
-                  "label": "Yes",
-                  "color": "#c4eef6",
-                  "id": "Yes"
-                }
-              ],
-              "others": [
-                {
-                  "uniqueID": "9649211033477532",
-                  "text": "Null",
-                  "label": "Null",
-                  "color": "#808080",
-                  "id": "null"
-                },
-                {
-                  "uniqueID": "10703273244353328",
-                  "text": "Others",
-                  "label": "Others",
-                  "color": "#808080",
-                  "id": "others"
-                }
-              ]
-            }
+            ]
           },
           "legend": {
-            "show": false,
             "textStyle": {
-              "color": "#000",
+              "color": "#000000",
               "fontSize": 12
-            }
+            },
+            "show": false
           },
           "dataLabel": {
-            "show": true,
             "textStyle": {
-              "color": "#000",
+              "color": "#000000",
               "fontSize": 12
-            }
+            },
+            "show": false
           },
           "innerRadius": 45
         }
       }
     },
     {
-      "id": "47316118021055675-3",
+      "id": "8047528744544558-3",
       "type": "text",
       "visible": true,
       "config": {
@@ -222,17 +180,17 @@
           "fontSize": 12,
           "textColor": "#282828"
         },
-        "text": "<b>Note:</b> One vote per parcel. Property owners and/or condo boards vote on behalf of the parcel. Totals are for map extent."
+        "text": "Description: additional information about this infographic."
       }
     }
   ],
-  "wid": "47316118021055675",
+  "name": "donut",
+  "wid": "8047528744544558",
   "dataSource": {
     "dataSourceType": "DATA_SOURCE_FEATURE_LAYER_FROM_MAP",
-    "name": "Vote: Proposed RPZ",
+    "name": "Vote: Proposed Residential Parking Zone",
     "layerId": "Vote_RPZ_3636",
     "useSelection": true,
-    "filterByExtent": true
-  },
-  "name": "donut"
+    "filterByExtent": "on"
+  }
 }
