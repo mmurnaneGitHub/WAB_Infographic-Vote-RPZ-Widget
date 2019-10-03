@@ -3,7 +3,7 @@ Infographic Widget for RPZ Voting (https://wspdsmap.cityoftacoma.org/website/PW/
 
 Customization to interact with other widgets in application.
 
-Version 2.12
+Version 2.13
 
 INSTRUCTIONS:
 1. Copy Widget.html and Widget.js to \widgets\Infographic\
