@@ -15,31 +15,31 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
-    'dojo/_base/declare',
-    'dojo/_base/lang',
-    'dojo/_base/array',
-    'dojo/_base/html',
-    'dojo/on',
-    'dojo/Deferred',
-    'dijit/_WidgetsInTemplateMixin',
-    'dijit/popup',
-           'dojox/mobile/Button',  //MJM - mobile button	
-           'jimu/PanelManager', //MJM - use to close another panel
-    'dijit/TooltipDialog',
-    'jimu/BaseWidget',
-    'jimu/dijit/GridLayout',
-    'jimu/LayerInfos/LayerInfos',
-    'jimu/utils',
-    './DijitFactory',
-    'jimu/DataSourceManager',
-    './dijits/SourceLauncher',
-    './dijits/ExtraSourceLauncher',
-    './_ChartSetting',
-    './IGUtils',
-    './utils'
-  ],
-  function(declare, lang, array, html, on, Deferred, _WidgetsInTemplateMixin, dojoPopup,
-    mobileButton, PanelManager,	
+  'dojo/_base/declare',
+  'dojo/_base/lang',
+  'dojo/_base/array',
+  'dojo/_base/html',
+  'dojo/on',
+  'dojo/Deferred',
+  'dijit/_WidgetsInTemplateMixin',
+  'dijit/popup',
+  'dojox/mobile/Button',  //MJM - Mobile button	
+  'jimu/PanelManager', //MJM - Use to close another panel
+  'dijit/TooltipDialog',
+  'jimu/BaseWidget',
+  'jimu/dijit/GridLayout',
+  'jimu/LayerInfos/LayerInfos',
+  'jimu/utils',
+  './DijitFactory',
+  'jimu/DataSourceManager',
+  './dijits/SourceLauncher',
+  './dijits/ExtraSourceLauncher',
+  './_ChartSetting',
+  './IGUtils',
+  './utils'
+],
+  function (declare, lang, array, html, on, Deferred, _WidgetsInTemplateMixin, dojoPopup,
+    mobileButton, PanelManager,
     TooltipDialog, BaseWidget, GridLayout, LayerInfos, jimuUtils, DijitFactory,
     DataSourceManager, SourceLauncher, ExtraSourceLauncher, ChartSetting, IGUtils, utils) {
 
@@ -54,13 +54,13 @@ define([
       mainDijitJson: null,
       mainDijitVisible: false,
 
-      postMixInProperties: function() {
+      postMixInProperties: function () {
         this.inherited(arguments);
         this.layerInfosObj = LayerInfos.getInstanceSync();
         this._loadingTypes = {};
       },
 
-      postCreate: function() {
+      postCreate: function () {
         this.inherited(arguments);
 
         this._initGolbalInfo();
@@ -72,7 +72,7 @@ define([
         this._initSettingIconEvent();
       },
 
-      startup: function() {
+      startup: function () {
         this.inherited(arguments);
         //render ui by config
         this._renderByConfig(this.config);
@@ -87,27 +87,27 @@ define([
         if (this.mainDijitVisible && this._avalidDataSource) {
           this._processdsdef = this._preprocessingDataSource();
         }
-       //MJM--------------------------------------------------------------------------	
+        //MJM--------------------------------------------------------------------------	
         new mobileButton({ //Create a button to search by Category	
-          label: "Back to RPZ Details  &nbsp;&nbsp;&nbsp;&nbsp;<img src='images/rightArrow18_2.png'>", 	
-          onClick: lang.hitch(this, this._back2Info)	
-        }, "buttonBack").startup();	
+          label: "Back to RPZ Details  &nbsp;&nbsp;&nbsp;&nbsp;<img src='images/rightArrow18_2.png'>",
+          onClick: lang.hitch(this, this._back2Info)
+        }, "buttonBack").startup();
         //-----------------------------------------------------------------------------	
       },
 
-      _back2Info: function () {  //MJM - Back to description panel.	
-          PanelManager.getInstance().showPanel(this.appConfig.widgetPool.widgets[3]);  //Loads and opens About panel: works, but stays open!!! Fix with onClose event.	
-          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[2].id + '_panel');  //close this panel - Infographic Widget
-      },	
-        
-      _listenDSManagerUpdateEvent: function() {
+      _back2Info: function () {  //MJM - Go back to description panel
+        PanelManager.getInstance().showPanel(this.appConfig.widgetPool.widgets[3]);  //Loads and opens About panel: works, but stays open!!!! Fix with onClose event.	
+        PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[2].id + '_panel');  //Close this panel - Infographic Widget
+      },
+
+      _listenDSManagerUpdateEvent: function () {
         this.exdsBeginUpdateHandle = on(this.dataSourceManager, 'begin-update',
-          lang.hitch(this, function(dsid) {
+          lang.hitch(this, function (dsid) {
             this._handleLoadingStatusForExds(dsid, true);
           }));
       },
 
-      _checkDataSource: function(config) {
+      _checkDataSource: function (config) {
         var dataSource = config && config.dataSource;
         var res = this._checkDataSourceCode(dataSource);
         this._avalidDataSource = res.code === 0;
@@ -116,7 +116,7 @@ define([
         }
       },
 
-      onOpen: function() {
+      onOpen: function () {
         //Only once the data source is initialized in startup
         //the contents of `onOpen` will be executed after init def
         if (this._processdsdef) { //first open
@@ -124,19 +124,19 @@ define([
         } else { //not first open
           this._onOpenTriger();
         }
-         //MJM - Added to get around Vote & About panels staying open.	
-          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget	
-          PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[3].id + '_panel');  //Close About Widget
-          //End MJM
+        //MJM - Added to get around Vote & About panels staying open.	
+        PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[1].id + '_panel');  //Close Vote Widget	
+        PanelManager.getInstance().closePanel(this.appConfig.widgetPool.widgets[3].id + '_panel');  //Close About Widget
+        //End MJM
       },
 
-      _onOpenTriger: function() {
+      _onOpenTriger: function () {
         if (!this.mainDijitVisible || !this._avalidDataSource) {
           return;
         }
 
         //ensure this.domNode is wide and high
-        this._isDOMInitialized().then(function() {
+        this._isDOMInitialized().then(function () {
           clearInterval(this.domReadyInterval);
           this._initSourceLaunchers();
           this.resize();
@@ -144,7 +144,7 @@ define([
       },
 
       //called by source launcher, returns the calculated data to render widget
-      _onMainValueUpdate: function(value) {
+      _onMainValueUpdate: function (value) {
         if (!this.mainDijit) {
           return;
         }
@@ -162,7 +162,7 @@ define([
         this.mainDijit.startRendering();
       },
 
-      _onRangeValueUpdate: function(value, isFirst) {
+      _onRangeValueUpdate: function (value, isFirst) {
         var prefix = isFirst ? 'RANGE1' : 'RANGE2';
         if (!this._shouldUpdateValue(value, prefix)) {
           return;
@@ -177,22 +177,22 @@ define([
         this.mainDijit.startRendering();
       },
 
-      _processDataSource: function() {
+      _processDataSource: function () {
         this.showLoading('process-ds');
-        this._processdsdef.then(function() {
+        this._processdsdef.then(function () {
           this.hideLoading('process-ds');
           this._processdsdef = null;
           this._setDataSource();
           this._setLayerInfoToMainDijit();
           this._onOpenTriger();
-        }.bind(this), function(error) {
+        }.bind(this), function (error) {
           this.hideLoading('process-ds');
           this._processdsdef = null;
           console.error(error);
         }.bind(this));
       },
 
-      _setDataSource: function() {
+      _setDataSource: function () {
         var dataSource = this.config && this.config.dataSource;
         if (!dataSource) {
           return;
@@ -200,12 +200,12 @@ define([
         if (!this.dijits || !this.dijits.length) {
           return;
         }
-        this.dijits.forEach(function(dijit) {
+        this.dijits.forEach(function (dijit) {
           dijit.setDataSource(dataSource);
         });
       },
 
-      _initSourceLaunchers: function() {
+      _initSourceLaunchers: function () {
         if (!this.config.dataSource) {
           return;
         }
@@ -223,7 +223,7 @@ define([
         }
       },
 
-      resize: function() {
+      resize: function () {
         this.inherited(arguments);
         if (this.layout) {
           this.layout.resize();
@@ -233,7 +233,7 @@ define([
         }
       },
 
-      onClose: function() {
+      onClose: function () {
         if (this.sourceLauncher) {
           this.sourceLauncher.sleep();
         }
@@ -250,7 +250,7 @@ define([
       },
 
       //Called when extral ds/widget output ds is changed
-      onDataSourceDataUpdate: function(dsId, data) {
+      onDataSourceDataUpdate: function (dsId, data) {
         this._handleLoadingStatusForExds(dsId, false);
         var ds = this.config.dataSource;
         var ds1 = this.rangeDataSource1;
@@ -272,7 +272,7 @@ define([
         }
       },
 
-      _handleLoadingStatusForExds: function(dsid, show) {
+      _handleLoadingStatusForExds: function (dsid, show) {
         var ds = this.config.dataSource;
         var ds1 = this.rangeDataSource1;
         var ds2 = this.rangeDataSource2;
@@ -289,7 +289,7 @@ define([
         }
       },
 
-      destroy: function() {
+      destroy: function () {
         if (this.sourceLauncher) {
           this.sourceLauncher.destroy();
         }
@@ -312,7 +312,7 @@ define([
       },
 
       // -------- init ------
-      _initGolbalInfo: function() {
+      _initGolbalInfo: function () {
         this.dataSourceManager = DataSourceManager.getInstance();
         this._features = [];
         this.layerObject = null;
@@ -334,7 +334,7 @@ define([
         });
       },
 
-      _initDijitFactory: function() {
+      _initDijitFactory: function () {
         DijitFactory.setNls(this.nls);
         DijitFactory.setMap(this.map);
         DijitFactory.setInSettingPage(false);
@@ -344,15 +344,15 @@ define([
         });
       },
 
-      _initSettingIconEvent: function() {
-        this.on('click', lang.hitch(this, function() {
+      _initSettingIconEvent: function () {
+        this.on('click', lang.hitch(this, function () {
           if (this.runtimeSettingDialog) {
             dojoPopup.close(this.runtimeSettingDialog);
           }
         }));
       },
 
-      _renderByConfig: function(config) {
+      _renderByConfig: function (config) {
         if (!config || !config.layout || !config.dijits) {
           return;
         }
@@ -360,7 +360,7 @@ define([
         this._createLayoutWithDijits(config);
       },
 
-      _initRangeSourceLauncher: function(dijitJson) {
+      _initRangeSourceLauncher: function (dijitJson) {
         var rangeStatistic = this._initRangeData(dijitJson);
         var rst1 = rangeStatistic.rst1;
         var rst2 = rangeStatistic.rst2;
@@ -384,12 +384,12 @@ define([
 
       //------------- tools ----------------------
 
-      showLoading: function(id) {
+      showLoading: function (id) {
         this._loadingTypes[id] = true;
         this._showLoading();
       },
 
-      hideLoading: function(id) {
+      hideLoading: function (id) {
         this._loadingTypes[id] = false;
         var shouldHide = this._shouldHideLoading();
         if (shouldHide) {
@@ -397,32 +397,32 @@ define([
         }
       },
 
-      _shouldHideLoading: function() {
+      _shouldHideLoading: function () {
         if (!this._loadingTypes) {
           return;
         }
         var ids = Object.keys(this._loadingTypes);
-        var values = ids.map(function(id) {
+        var values = ids.map(function (id) {
           return this._loadingTypes[id];
         }.bind(this));
-        return values.every(function(value) {
+        return values.every(function (value) {
           return !value;
         });
       },
 
-      _showLoading: function() {
+      _showLoading: function () {
         if (html.hasClass(this.shelter, 'hide')) {
           html.removeClass(this.shelter, 'hide');
         }
       },
 
-      _hideLoading: function() {
+      _hideLoading: function () {
         if (!html.hasClass(this.shelter, 'hide')) {
           html.addClass(this.shelter, 'hide');
         }
       },
 
-      _HandlingOutliers: function(value) {
+      _HandlingOutliers: function (value) {
         if (!this.mainDijit) {
           return;
         }
@@ -432,14 +432,14 @@ define([
         }
       },
 
-      _spellGaugeValueObj: function() {
+      _spellGaugeValueObj: function () {
         return {
           value: this.MAIN_VALUE,
           ranges: [this.RANGE1_VALUE, this.RANGE2_VALUE]
         };
       },
 
-      _isGaugeValueObjValid: function(value) {
+      _isGaugeValueObjValid: function (value) {
         var valueObj = value;
         var ranges = valueObj && valueObj.ranges;
         if (!valueObj || !ranges) {
@@ -459,7 +459,7 @@ define([
         return vaild;
       },
 
-      _checkDataSourceCode: function(dataSource) {
+      _checkDataSourceCode: function (dataSource) {
         var mainDijitJson = this.mainDijitJson;
         if (!mainDijitJson) {
           return {};
@@ -478,7 +478,7 @@ define([
         var results = [main, r1, r2];
         var message = '';
         var code = utils.getCheckDataSourceResultCode(results);
-        results.forEach(function(res) {
+        results.forEach(function (res) {
           message += this._getDSErrorString(res);
         }.bind(this));
 
@@ -488,7 +488,7 @@ define([
         };
       },
 
-      _getDSErrorString: function(reslut) {
+      _getDSErrorString: function (reslut) {
         var errorString = '';
         if (!reslut) {
           return errorString;
@@ -507,21 +507,21 @@ define([
         return errorString;
       },
 
-      _clearDijits: function() {
+      _clearDijits: function () {
         if (this.dijits && this.dijits.length) {
-          this.dijits.forEach(lang.hitch(this, function(dijit) {
+          this.dijits.forEach(lang.hitch(this, function (dijit) {
             dijit.destroy();
           }));
         }
         this.dijits = [];
       },
 
-      _createLayoutWithDijits: function(config) {
+      _createLayoutWithDijits: function (config) {
         var dijitJsons = config.dijits;
         if (!dijitJsons || !dijitJsons.length) {
           return;
         }
-        var components = dijitJsons.map(function(d) {
+        var components = dijitJsons.map(function (d) {
           var dijit = DijitFactory.createDijit(d);
           this.dijits.push(dijit);
           return {
@@ -537,40 +537,40 @@ define([
           editable: false
         });
 
-        this.layout.on('initialised', lang.hitch(this, function() {
-          array.forEach(this.dijits, lang.hitch(this, function(dijit) {
+        this.layout.on('initialised', lang.hitch(this, function () {
+          array.forEach(this.dijits, lang.hitch(this, function (dijit) {
             dijit.startup();
           }));
         }));
       },
 
-      _getMainDijit: function() {
+      _getMainDijit: function () {
         if (!this.dijits || !this.dijits.length) {
           return;
         }
         var dijit = null;
         var validTypes = ['number', 'gauge', 'chart'];
-        dijit = this.dijits.filter(function(dijit) {
+        dijit = this.dijits.filter(function (dijit) {
           return validTypes.indexOf(dijit.type) > -1;
         })[0]; //Now wo only support one data-needed dijit in a widget
 
         return dijit;
       },
 
-      _getMainDijitJson: function() {
+      _getMainDijitJson: function () {
         if (!this.config || !this.config.dijits || !this.config.dijits.length) {
           return;
         }
         var dijit = null;
         var validTypes = ['number', 'gauge', 'chart'];
-        dijit = this.config.dijits.filter(function(dijit) {
+        dijit = this.config.dijits.filter(function (dijit) {
           return validTypes.indexOf(dijit.type) > -1;
         })[0]; //Now wo only support one data-needed dijit in a widget
 
         return dijit;
       },
 
-      _initRangeValue: function(dijitJson) {
+      _initRangeValue: function (dijitJson) {
         if (!dijitJson || dijitJson.type !== 'gauge') {
           return;
         }
@@ -579,13 +579,13 @@ define([
         this.RANGE2_VALUE = fixedValue.range2;
       },
 
-      _ininRangeDataSource: function(dijitJson) {
+      _ininRangeDataSource: function (dijitJson) {
         var rds = utils.getRangeDataSource(dijitJson);
         this.rangeDataSource1 = rds.range1;
         this.rangeDataSource2 = rds.range2;
       },
 
-      _setLayerInfoToMainDijit: function() {
+      _setLayerInfoToMainDijit: function () {
         if (!this.mainDijit) {
           return;
         }
@@ -593,7 +593,7 @@ define([
           this.popupInfo);
       },
 
-      _createRuntimeSettingIocn: function(config) {
+      _createRuntimeSettingIocn: function (config) {
         if (!this.mainDijitVisible) {
           return;
         }
@@ -601,9 +601,9 @@ define([
           return;
         }
 
-        if (!config.dijits.some(function(d) {
-            return d.visible && d.type === 'chart';
-          }, this)) {
+        if (!config.dijits.some(function (d) {
+          return d.visible && d.type === 'chart';
+        }, this)) {
           return;
         }
 
@@ -620,7 +620,7 @@ define([
         this.runtimeSettingDialog.isShow = false;
       },
 
-      _onRuntimeSettingIconClicked: function(evt) {
+      _onRuntimeSettingIconClicked: function (evt) {
         if (this.runtimeSettingDialog.isShow) {
           dojoPopup.close(this.runtimeSettingDialog);
           this.runtimeSettingDialog.isShow = false;
@@ -634,8 +634,8 @@ define([
         evt.stopPropagation();
       },
 
-      _createChartSettingContent: function(config) {
-        var chartJson = config.dijits.filter(function(d) {
+      _createChartSettingContent: function (config) {
+        var chartJson = config.dijits.filter(function (d) {
           return d.type === 'chart';
         })[0]; //we don't care more than one chart.
         if (!chartJson) {
@@ -649,7 +649,7 @@ define([
 
         var chartSetting = new ChartSetting({
           chartJson: chartJson,
-          chartDijit: this.dijits.filter(function(d) {
+          chartDijit: this.dijits.filter(function (d) {
             return d.jsonId === chartJson.id;
           })[0],
           nls: this.nls
@@ -658,10 +658,10 @@ define([
       },
 
       //Check whether DOM has been initialized, return a deferred
-      _isDOMInitialized: function() {
+      _isDOMInitialized: function () {
         var deferred = new Deferred();
-        setTimeout(function() {
-          this.domReadyInterval = setInterval(function() {
+        setTimeout(function () {
+          this.domReadyInterval = setInterval(function () {
             var dijitDomNode = this.mainDijit && this.mainDijit.domNode;
             if (dijitDomNode) {
               var box = html.getMarginBox(dijitDomNode);
@@ -675,7 +675,7 @@ define([
         return deferred;
       },
 
-      _initSourceLauncher: function() {
+      _initSourceLauncher: function () {
         var ds = this.config.dataSource;
         if (!ds) {
           return;
@@ -718,7 +718,7 @@ define([
         this._listenSourceLauncherEvent();
       },
 
-      _initRangeData: function(dijitJson) {
+      _initRangeData: function (dijitJson) {
         if (dijitJson.type !== 'gauge') {
           return;
         }
@@ -737,7 +737,7 @@ define([
         };
       },
 
-      _initRangeLauncher: function(rst, rds, isFirst) {
+      _initRangeLauncher: function (rst, rds, isFirst) {
         if (isFirst) {
           if (rst) {
             this.rangeSourceLauncher1 = new ExtraSourceLauncher({
@@ -764,51 +764,51 @@ define([
 
       },
 
-      _listenSourceLauncherEvent: function() {
-        this.own(on(this.sourceLauncher, 'data-update', lang.hitch(this, function(value) {
+      _listenSourceLauncherEvent: function () {
+        this.own(on(this.sourceLauncher, 'data-update', lang.hitch(this, function (value) {
           this._onMainValueUpdate(value);
 
         })));
-        this.own(on(this.sourceLauncher, 'loading', lang.hitch(this, function(id) {
+        this.own(on(this.sourceLauncher, 'loading', lang.hitch(this, function (id) {
           this.showLoading(id);
         })));
-        this.own(on(this.sourceLauncher, 'unloading', lang.hitch(this, function(id) {
+        this.own(on(this.sourceLauncher, 'unloading', lang.hitch(this, function (id) {
           this.hideLoading(id);
         })));
-        this.own(on(this.sourceLauncher, 'failed', lang.hitch(this, function() {
+        this.own(on(this.sourceLauncher, 'failed', lang.hitch(this, function () {
           this._HandlingOutliers();
         })));
 
-        this.own(on(this.sourceLauncher, 'start', lang.hitch(this, function() {
+        this.own(on(this.sourceLauncher, 'start', lang.hitch(this, function () {
           this._onMainSourceLauncherStart();
         })));
-        this.own(on(this.sourceLauncher, 'done', lang.hitch(this, function() {
+        this.own(on(this.sourceLauncher, 'done', lang.hitch(this, function () {
           this._onMainSourceLauncherDone();
         })));
       },
 
-      _onMainSourceLauncherStart: function() {
+      _onMainSourceLauncherStart: function () {
         if (this.mainDijit && typeof this.mainDijit.onUpdateDataStart === 'function') {
           this.mainDijit.onUpdateDataStart();
         }
       },
 
-      _onMainSourceLauncherDone: function() {
+      _onMainSourceLauncherDone: function () {
         if (this.mainDijit && typeof this.mainDijit.onUpdateDataDone === 'function') {
           this.mainDijit.onUpdateDataDone();
         }
       },
 
-      _listenRangeLauncherEvent: function(rangeLauncher, isFirstRange) {
+      _listenRangeLauncherEvent: function (rangeLauncher, isFirstRange) {
         if (!rangeLauncher) {
           return;
         }
-        this.own(on(rangeLauncher, 'data-update', lang.hitch(this, function(value) {
+        this.own(on(rangeLauncher, 'data-update', lang.hitch(this, function (value) {
           this._onRangeValueUpdate(value, isFirstRange);
         })));
       },
 
-      _isDifferentValues: function(value, type) {
+      _isDifferentValues: function (value, type) {
         var different = true;
         var oldValue = this[type + '_VALUE'];
 
@@ -816,12 +816,12 @@ define([
           var newAttrs = null,
             oldAttrs = null;
           if (value.features) {
-            newAttrs = value.features.map(function(f) {
+            newAttrs = value.features.map(function (f) {
               return f.attributes;
             });
           }
           if (oldValue && oldValue.features) {
-            oldAttrs = oldValue.features.map(function(f) {
+            oldAttrs = oldValue.features.map(function (f) {
               return f.attributes;
             });
           }
@@ -837,21 +837,21 @@ define([
         return different;
       },
 
-      _shouldUpdateValue: function(value, type) {
+      _shouldUpdateValue: function (value, type) {
         var isDifferent = this._isDifferentValues(value, type);
         var isOutliers = this._HandlingOutliers(value);
         return isDifferent && !isOutliers;
       },
 
       //get value for this.popupInfo, this.layerObject, this.featureLayerForFrameWork
-      _preprocessingDataSource: function() {
+      _preprocessingDataSource: function () {
         var dataSource = this.config && this.config.dataSource;
         var deferred = new Deferred();
         if (!dataSource) {
           deferred.reject('Empty data source');
           return deferred;
         }
-        return this.igUtils.preprocessingDataSource(dataSource).then(function(res) {
+        return this.igUtils.preprocessingDataSource(dataSource).then(function (res) {
           this.layerObject = res && res.layerObject;
           this.popupInfo = res && res.popupInfo;
           this.featureLayerForFrameWork = res && res.featureLayerForFrameWork;
